@@ -86,37 +86,33 @@ export default function AIGenerator() {
       </button>
 
       {aiResponse && (
-        <div style={{ marginTop: "40px" }}>
-          <h3>AI Generated Preview</h3>
+  <div style={{ marginTop: "40px", textAlign: "center" }}>
+    <h2 style={{ color: "#22c55e" }}>
+      🎉 Your startup is starting!
+    </h2>
 
-          <pre
-            style={{
-              background: "#f5f5f5",
-              padding: "20px",
-              borderRadius: "10px",
-              whiteSpace: "pre-wrap",
-              marginTop: "10px"
-            }}
-          >
-{JSON.stringify(aiResponse, null, 2)}
-          </pre>
+    <p style={{ marginTop: "10px", color: "#aaa" }}>
+      We are preparing your roadmap and pitch...
+    </p>
 
-          <button
-            onClick={() => navigate("/select", { state: aiResponse })}
-            style={{
-              marginTop: "20px",
-              padding: "12px 24px",
-              background: "#1a1a1a",
-              color: "white",
-              borderRadius: "10px",
-              border: "none",
-              cursor: "pointer"
-            }}
-          >
-            Continue →
-          </button>
-        </div>
-      )}
+    <button
+      onClick={() => navigate("/select", { state: aiResponse })}
+      style={{
+        marginTop: "25px",
+        padding: "12px 28px",
+        background: "#22c55e",
+        color: "black",
+        fontWeight: "bold",
+        borderRadius: "12px",
+        border: "none",
+        cursor: "pointer"
+      }}
+    >
+      Let’s Go 🚀
+    </button>
+  </div>
+)}
+
     </div>
   );
 }
