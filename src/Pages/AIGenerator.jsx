@@ -18,13 +18,19 @@ export default function AIGenerator() {
     setLoading(true);
     setError("");
 
-    try {
-      const response = await fetch("/api/generate", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ idea })
-});
+    
+    const API_URL = import.meta.env.DEV
+      ? "http://localhost:5000/api/generate" // localhost backend
+      : "/api/generate";                     // vercel serverless
 
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ idea })
+      });
 
       if (!response.ok) {
         throw new Error("Failed to generate plan");
@@ -85,34 +91,34 @@ export default function AIGenerator() {
         {loading ? "Generating..." : "Generate Plan"}
       </button>
 
+      {/* ✅ Success Message Instead of Preview */}
       {aiResponse && (
-  <div style={{ marginTop: "40px", textAlign: "center" }}>
-    <h2 style={{ color: "#22c55e" }}>
-      🎉 Your startup is starting!
-    </h2>
+        <div style={{ marginTop: "40px", textAlign: "center" }}>
+          <h2 style={{ color: "#22c55e" }}>
+            🎉 Your startup is starting!
+          </h2>
 
-    <p style={{ marginTop: "10px", color: "#aaa" }}>
-      We are preparing your roadmap and pitch...
-    </p>
+          <p style={{ marginTop: "10px", color: "#777" }}>
+            Your roadmap and pitch are ready.
+          </p>
 
-    <button
-      onClick={() => navigate("/select", { state: aiResponse })}
-      style={{
-        marginTop: "25px",
-        padding: "12px 28px",
-        background: "#22c55e",
-        color: "black",
-        fontWeight: "bold",
-        borderRadius: "12px",
-        border: "none",
-        cursor: "pointer"
-      }}
-    >
-      Let’s Go 🚀
-    </button>
-  </div>
-)}
-
+          <button
+            onClick={() => navigate("/select", { state: aiResponse })}
+            style={{
+              marginTop: "25px",
+              padding: "12px 28px",
+              background: "#22c55e",
+              color: "black",
+              fontWeight: "bold",
+              borderRadius: "12px",
+              border: "none",
+              cursor: "pointer"
+            }}
+          >
+            Let’s Go 🚀
+          </button>
+        </div>
+      )}
     </div>
   );
 }
