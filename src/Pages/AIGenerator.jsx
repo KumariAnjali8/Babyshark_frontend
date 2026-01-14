@@ -19,7 +19,8 @@ export default function AIGenerator() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/generate", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/generate`
+, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
