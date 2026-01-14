@@ -1,0 +1,75 @@
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
+  }
+
+  try {
+    console.log("GROQ KEY LOADED:", !!process.env.GROQ_API_KEY);
+
+    const { idea } = req.body;
+
+    if (!idea) {
+      return res.status(400).json({ error: "Idea required" });
+    }
+
+    const response = await fetch(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "llama-3.1-8b-instant",
+          messages: [
+            {
+              role: "system",
+              content: "You are a startup planner. You ONLY return valid JSON."
+            },
+            {
+              role: "user",
+              content: `
+Return ONLY JSON in this exact format:
+{
+  "roadmap": [
+    { "step": 1, "title": "string", "description": "string" }
+  ],
+  "pitch": {
+    "short": "string",
+    "long": "string"
+  }
+}
+
+Startup idea:
+${idea}
+              `
+            }
+          ]
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const err = await response.text();
+      console.error("GROQ ERROR:", err);
+      return res.status(500).json({ error: "Groq API error" });
+    }
+
+    const data = await response.json();
+    const aiText = data.choices[0].message.content;
+
+    let structured;
+    try {
+      structured = JSON.parse(aiText);
+    } catch {
+      return res.status(500).json({ error: "AI returned invalid JSON" });
+    }
+
+    res.status(200).json(structured);
+
+  } catch (err) {
+    console.error("SERVER ERROR:", err);
+    res.status(500).json({ error: "Server failed" });
+  }
+}
