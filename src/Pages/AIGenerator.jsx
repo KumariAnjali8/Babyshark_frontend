@@ -2,123 +2,75 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function AIGenerator() {
-  const navigate = useNavigate();
-
   const [idea, setIdea] = useState("");
   const [loading, setLoading] = useState(false);
-  const [aiResponse, setAiResponse] = useState(null);
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const generatePlan = async () => {
-    if (!idea.trim()) {
-      setError("Please enter a startup idea");
-      return;
-    }
+    if (!idea.trim()) return;
 
     setLoading(true);
     setError("");
 
-    
     const API_URL = import.meta.env.DEV
-      ? "http://localhost:5000/api/generate" // localhost backend
-      : "/api/generate";                     // vercel serverless
+      ? "http://localhost:5000/api/generate"
+      : "/api/generate";
 
     try {
-      const response = await fetch(API_URL, {
+      const res = await fetch(API_URL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idea })
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to generate plan");
-      }
+      if (!res.ok) throw new Error("AI failed");
 
-      const data = await response.json();
-      setAiResponse(data);
+      const data = await res.json();
 
-    } catch (err) {
-      console.error(err);
-      setError("AI generation failed. Please try again.");
+      // ✅ SAVE FULL STARTUP DATA
+      const startup = {
+        idea,
+        roadmap: data.roadmap,
+        pitch: data.pitch,
+        licenses: data.licenses || [],
+        planner: data.planner || [],
+        licenseStatus: (data.licenses || []).map(l => ({
+          name: l,
+          status: "In Process"
+        }))
+      };
+
+      localStorage.setItem("startupData", JSON.stringify(startup));
+
+      navigate("/dashboard");
+
+    } catch (e) {
+      console.error(e);
+      setError("AI generation failed");
     }
 
     setLoading(false);
   };
 
   return (
-    <div style={{ padding: "40px", maxWidth: "800px", margin: "auto" }}>
-      <h1 style={{ fontSize: "32px", marginBottom: "10px" }}>
-        Startup Idea Planner
-      </h1>
-
-      <p style={{ marginBottom: "20px", color: "#555" }}>
-        Enter your startup idea and get a roadmap & pitch instantly.
-      </p>
+    <div style={{ padding: 40 }}>
+      <h1>Describe your startup idea</h1>
 
       <textarea
-        value={idea}
-        onChange={(e) => setIdea(e.target.value)}
-        placeholder="Example: Momo stall near college"
         rows={4}
-        style={{
-          width: "100%",
-          padding: "14px",
-          borderRadius: "10px",
-          border: "1px solid #ccc",
-          fontSize: "16px"
-        }}
+        value={idea}
+        onChange={e => setIdea(e.target.value)}
+        placeholder="Example: Food delivery app for hostels"
       />
 
-      {error && (
-        <p style={{ color: "red", marginTop: "10px" }}>{error}</p>
-      )}
+      <br /><br />
 
-      <button
-        onClick={generatePlan}
-        disabled={loading}
-        style={{
-          marginTop: "20px",
-          padding: "12px 24px",
-          background: "black",
-          color: "white",
-          borderRadius: "10px",
-          border: "none",
-          cursor: "pointer"
-        }}
-      >
-        {loading ? "Generating..." : "Generate Plan"}
+      <button onClick={generatePlan} disabled={loading}>
+        {loading ? "Generating..." : "Generate Startup Plan"}
       </button>
 
-      {/* ✅ Success Message Instead of Preview */}
-      {aiResponse && (
-        <div style={{ marginTop: "40px", textAlign: "center" }}>
-          <h2 style={{ color: "#22c55e" }}>
-            🎉 Your startup is starting!
-          </h2>
-
-          <p style={{ marginTop: "10px", color: "#777" }}>
-            Your roadmap and pitch are ready.
-          </p>
-
-          <button
-            onClick={() => navigate("/select", { state: aiResponse })}
-            style={{
-              marginTop: "25px",
-              padding: "12px 28px",
-              background: "#22c55e",
-              color: "black",
-              fontWeight: "bold",
-              borderRadius: "12px",
-              border: "none",
-              cursor: "pointer"
-            }}
-          >
-            Let’s Go 🚀
-          </button>
-        </div>
-      )}
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </div>
   );
 }

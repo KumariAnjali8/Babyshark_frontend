@@ -25,12 +25,14 @@ export default async function handler(req, res) {
           messages: [
             {
               role: "system",
-              content: "You are a startup planner. You ONLY return valid JSON."
+              content:
+                "You are a startup advisor. You MUST return only valid JSON, no text."
             },
             {
               role: "user",
               content: `
 Return ONLY JSON in this exact format:
+
 {
   "roadmap": [
     { "step": 1, "title": "string", "description": "string" }
@@ -38,7 +40,9 @@ Return ONLY JSON in this exact format:
   "pitch": {
     "short": "string",
     "long": "string"
-  }
+  },
+  "licenses": ["string"],
+  "planner": ["string"]
 }
 
 Startup idea:
@@ -62,7 +66,8 @@ ${idea}
     let structured;
     try {
       structured = JSON.parse(aiText);
-    } catch {
+    } catch (e) {
+      console.error("JSON PARSE ERROR:", aiText);
       return res.status(500).json({ error: "AI returned invalid JSON" });
     }
 
