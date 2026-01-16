@@ -1,16 +1,94 @@
-# React + Vite
+# 🦈 BabyShark — Startup Idea to Execution Platform
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+BabyShark is a web platform that helps founders turn startup ideas into real execution plans using AI.  
+It generates a roadmap, pitch, license requirements, and a daily planner, and provides a workspace to track progress.
 
-Currently, two official plugins are available:
+This project is built as a full-stack application using React, Node.js, and AI APIs (Groq).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 👩‍💼 For Founders
+- Enter startup idea using AI prompt
+- AI-generated:
+  - 📌 Roadmap
+  - 🎤 Pitch (short & long)
+  - 📄 Required licenses
+  - 🗓 Planner tasks
+- License tracking (In Process)
+- Progress tracker
+- Daily planner
 
-## Expanding the ESLint configuration
+### 💰 For Investors / Contributors (Upcoming)
+- Explore startups
+- View public startup profiles
+- Connect with founders
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🧠 Tech Stack
+
+### Frontend
+- React (Vite)
+- React Router DOM
+- CSS (inline )
+
+### Backend (Local Development)
+- Node.js
+- Express
+- Groq AI API
+
+### Backend (Production - Vercel)
+- Vercel Serverless Functions
+
+---
+
+## 📂 Project Structure
+DEMO/
+├── backend/ # Express server (localhost)
+│ └── server.js
+│
+└── babyshark/ # Frontend + Vercel API
+├── api/
+│ └── generate.js # Serverless AI API for Vercel
+│
+└── src/
+├── Layout/
+│ └── MainLayout.jsx
+├── Pages/
+│ ├── Home.jsx
+│ ├── Explore.jsx
+│ ├── Dashboard.jsx
+│ ├── AIGenerator.jsx
+│ └── Project/
+│ ├── Roadmap.jsx
+│ ├── Pitch.jsx
+│ ├── Licenses.jsx
+│ ├── Planner.jsx
+│ └── Progress.jsx
+└── App.jsx
+
+#important
+## ⚙️ Setup Instructions (Local Development)
+Create .env file inside backend:
+
+GROQ_API_KEY=your_api_key_here
+PORT=5000
+
+Run backend:
+
+node server.js
+
+Backend runs on:
+
+http://localhost:5000
+
+Frontend Setup
+cd ../babyshark
+npm install
+npm run dev
+
+Frontend runs on:
+
+http://localhost:5173
