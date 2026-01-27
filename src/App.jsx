@@ -13,21 +13,37 @@ import Explore from "./Pages/Explore";
 import FeasibilityCheck from "./Pages/FeasibilityCheck";
 import Workspace from "./Pages/Workspace";
 
+import Login from "./Pages/Login";
+import Register from "./Pages/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/home" element={<Home />} />
-        <Route path="/ai" element={<AIGenerator />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/" element={<FeasibilityCheck />} />
-        <Route path="/roadmap" element={<Roadmap />} />
-        <Route path="/pitch" element={<Pitch />} />
-        <Route path="/licenses" element={<Licenses />} />
-        <Route path="/progress" element={<Progress />} />
-        <Route path="/planner" element={<Planner />} />
-        <Route path="/explore" element={<Explore />} />
-        <Route path="/workspace" element={<Workspace />} />
+
+        {/* PUBLIC ROUTES */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+
+        {/* PROTECTED ROUTES */}
+        <Route path="/" element={
+          <ProtectedRoute>
+            <FeasibilityCheck />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/ai" element={<ProtectedRoute><AIGenerator /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/roadmap" element={<ProtectedRoute><Roadmap /></ProtectedRoute>} />
+        <Route path="/pitch" element={<ProtectedRoute><Pitch /></ProtectedRoute>} />
+        <Route path="/licenses" element={<ProtectedRoute><Licenses /></ProtectedRoute>} />
+        <Route path="/progress" element={<ProtectedRoute><Progress /></ProtectedRoute>} />
+        <Route path="/planner" element={<ProtectedRoute><Planner /></ProtectedRoute>} />
+        <Route path="/explore" element={<ProtectedRoute><Explore /></ProtectedRoute>} />
+        <Route path="/workspace" element={<ProtectedRoute><Workspace /></ProtectedRoute>} />
+
       </Routes>
     </BrowserRouter>
   );
